@@ -1,0 +1,110 @@
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Web Client for GPS and RFID Systems. </title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{{ static_url("css/bootstrap.min.css")}}" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{{ static_url("css/thumbnail-gallery.css")}}" rel="stylesheet">
+    <script src="{{ static_url("js/plotly-latest.min.js") }}"></script>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    
+  <div id="tester" style="width:90%;height:250px;"></div>
+    <!-- Page Content -->
+            <!-- Footer -->
+        <script language="javascript" type="text/javascript"> 
+            var wsUri = "ws://192.168.1.222:8765/";
+
+            var output;
+            var now     = new Date(); 
+            var hour    = now.getHours();
+            var minute  = now.getMinutes();
+            var sec  = now.getSeconds(); 
+            function sleep(milliseconds) {
+                var start = new Date().getTime();
+                  for (var i = 0; i < 1e7; i++) {
+                    if ((new Date().getTime() - start) > milliseconds){
+                      break;
+                    }
+                  }
+            }
+
+              function init(){
+                output = document.getElementById("output"); 
+                testWebSocket(); 
+              }
+              function testWebSocket(){
+                    websocket = new WebSocket(wsUri); 
+                    websocket.onopen = function(evt) { onOpen(evt) }; 
+                    websocket.onclose = function(evt) { onClose(evt) }; 
+                    websocket.onmessage = function(evt) { onMessage(evt) }; 
+                    websocket.onerror = function(evt) { onError(evt) }; 
+              }  
+
+              function onOpen(evt) { 
+                    console.log("connected !")
+
+              }  
+
+              function onClose(evt){  
+                  console.log(evt.data)   
+              }  
+
+              function onMessage(evt){ 
+                var now     = new Date(); 
+                var hour    = now.getHours();
+                var minute  = now.getMinutes();
+                var sec  = now.getSeconds();
+               
+                json = JSON.stringify(eval("(" + evt.data + ")"));
+                data = JSON.parse(json);
+                
+                TESTER = document.getElementById('tester');
+                  Plotly.plot( TESTER, [{
+                      x: now,
+                      y: data['unit'] }], {
+                      margin: { t: 0 } } );
+
+                console.log(evt);
+               
+              }  
+
+              function onError(evt) {
+                  console.log(evt.data) 
+              }  
+               
+              function writeToScreen(message){ 
+                    var pre = document.createElement("p"); pre.style.wordWrap = "break-word"; pre.innerHTML = message; output.appendChild(pre); }  window.addEventListener("load", init, false);  
+        </script>  <h2>WebSocket Test</h2>  
+  
+    <!-- /.container -->
+
+    <!-- jQuery -->
+    <script src="{{static_url("js/jquery.js")}}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src={{ static_url("js/bootstrap.min.js")}}></script>
+
+</body>
+
+</html>
