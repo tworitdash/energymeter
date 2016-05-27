@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Web Client for GPS and RFID Systems. </title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/thumbnail-gallery.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    
+
+    <!-- Page Content -->
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-lg-12">
+                <h1 class="page-header">GPS and RFID Web Client for Testing. :P</h1>
+            </div>
+
+            <div class="col-lg-3 col-md-4 col-xs-6 thumb">
+                <a class="thumbnail" href="#" id = "1">
+                    
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-4 col-xs-6 thumb">
+                <a class="thumbnail" href="#" id = "2">
+                    
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-4 col-xs-6 thumb">
+                <a class="thumbnail" href="#" id = "3"> 
+                   
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-4 col-xs-6 thumb">
+                <a class="thumbnail" href="#" id = "4">
+                    
+                </a>
+            </div>
+            
+            
+        </div>
+
+        <hr>
+
+        <!-- Footer -->
+        <script language="javascript" type="text/javascript"> 
+            var wsUri = "ws://192.168.1.222:8765/";
+
+            var output;
+            var now     = new Date(); 
+            var hour    = now.getHours();
+            var minute  = now.getMinutes();
+            var sec  = now.getSeconds(); 
+            function sleep(milliseconds) {
+                var start = new Date().getTime();
+                  for (var i = 0; i < 1e7; i++) {
+                    if ((new Date().getTime() - start) > milliseconds){
+                      break;
+                    }
+                  }
+            }
+
+              function init(){
+                output = document.getElementById("output"); 
+                testWebSocket(); 
+              }
+              function testWebSocket(){
+                    websocket = new WebSocket(wsUri); 
+                    websocket.onopen = function(evt) { onOpen(evt) }; 
+                    websocket.onclose = function(evt) { onClose(evt) }; 
+                    websocket.onmessage = function(evt) { onMessage(evt) }; 
+                    websocket.onerror = function(evt) { onError(evt) }; 
+              }  
+
+              function onOpen(evt) { 
+                    $('#1').append("<p>Connected </p> at " + hour.toString() + ":" + minute.toString() + ":" + sec.toString()); 
+              }  
+
+              function onClose(evt){  
+                    $('#2').append("<p>Disconnected</p> at " + hour.toString() + ":" + minute.toString() + ":" + sec.toString()); 
+              }  
+
+              function onMessage(evt){ 
+                var now     = new Date(); 
+                var hour    = now.getHours();
+                var minute  = now.getMinutes();
+                var sec  = now.getSeconds(); 
+                    $('#3').html("Received: " + evt.data + " at " + hour.toString() + ":" + minute.toString() + ":" + sec.toString()); 
+              }  
+
+              function onError(evt) {
+                    $('#4').append(evt.data + hour.toString() + "hours" + minute.toString() + "minutes" + sec.toString() + "seconds"); 
+              }  
+               
+              function writeToScreen(message){ 
+                    var pre = document.createElement("p"); pre.style.wordWrap = "break-word"; pre.innerHTML = message; output.appendChild(pre); }  window.addEventListener("load", init, false);  
+        </script>  <h2>WebSocket Test</h2>  
+
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright &copy; Your Website 2014</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+    <!-- /.container -->
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
