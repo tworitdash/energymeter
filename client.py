@@ -7,6 +7,8 @@ import time
 import asyncio
 import websockets
 import json as j
+import pandas as pd
+import numpy as np
 #import pynmea2
 #from pynmea2 import ChecksumError
 #from pynmea2 import ParseError
@@ -22,23 +24,26 @@ async def hello():
                     print("> {}".format(data))
                     greeting = await websocket.recv()
                     print("< {}".format(data))
+
                     time.sleep(10)
 
 
 async def retrieve():
+        ser.write(str.encode('q'))
         #print("I am debugging before read :)")
         data = ser.readline().decode()
         #print("I am debugging after read :(")
         print(data)
+        ser.write(str.encode('%' + 'w' + '%'))
         data_to_be_sent = await concurrent(data)
         return(data_to_be_sent)
 
 async def concurrent(data):    
     #while True:
     for line in data.split('\n'):
-        unit = line[4:8]
-        load = line[13:17]
-        power_factor = line[20:24]
+        unit = line[5:9]
+        load = line[19:22]
+        power_factor = line[28:32]
         data = {"unit":unit, "load":load, "power_factor":power_factor}
         #data_json = j.loads(data)
         print(data['unit'])
